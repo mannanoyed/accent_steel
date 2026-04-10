@@ -111,3 +111,35 @@ Log:
 - Improve:
   - Matching accuracy
   - Suggestion ranking
+
+
+  flowchart TD
+
+A[MTO Revision Triggered] --> B[Compare with Previous MTO]
+
+B --> C{Material Change Type}
+
+C -->|Excess Material| D[Add to Surplus Pool]
+C -->|Material Shortage| E[Add to Demand Pool]
+
+D --> F[Global Surplus Pool<br/>All Projects]
+E --> G[Global Demand Pool<br/>All Projects]
+
+F --> H[Matching Engine]
+G --> H[Matching Engine]
+
+H --> I{Match Found?}
+
+I -->|Yes| J[Generate Reallocation Suggestion<br/>Project A → Project B]
+I -->|No| K[Proceed with New Procurement]
+
+J --> L[User Decision Layer]
+
+L -->|Approve| M[Transfer Material]
+L -->|Reject| K
+
+M --> N[Update Project States<br/>Surplus ↓ Demand ↓]
+
+N --> O[Log Transaction<br/>Cost Saved + Audit Trail]
+
+K --> O
